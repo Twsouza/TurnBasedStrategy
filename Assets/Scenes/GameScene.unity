@@ -878,6 +878,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52174e8a2f0d15a479e7ad92eaf6dec9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cinemachineVirtualCamera: {fileID: 1142732247}
 --- !u!1 &1345027235
 GameObject:
   m_ObjectHideFlags: 0
