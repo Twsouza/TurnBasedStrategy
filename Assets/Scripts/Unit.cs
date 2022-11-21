@@ -4,52 +4,41 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
-  [SerializeField] private Animator unitAnimator;
-  private Vector3 targetPosition;
-  private GridPosition gridPosition;
 
-  private void Awake()
-  {
-    targetPosition = transform.position;
-  }
+    private GridPosition gridPosition;
+    private MoveAction moveAction;
 
-  private void Start()
-  {
-    GridPosition gridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
-    LevelGrid.Instance.AddUnitAtGridPosition(gridPosition, this);
-
-    this.gridPosition = gridPosition;
-  }
-
-  private void Update()
-  {
-    float stoppingDistance = .1f;
-    if (Vector3.Distance(transform.position, targetPosition) > stoppingDistance)
+    private void Awake()
     {
-      unitAnimator.SetBool("IsWalking", true);
-
-      Vector3 moveDirection = (targetPosition - transform.position).normalized;
-      float moveSpeed = 4f;
-      transform.position += moveDirection * moveSpeed * Time.deltaTime;
-
-      float rotateSpeed = 10f;
-      transform.forward = Vector3.Lerp(transform.forward, moveDirection, Time.deltaTime * rotateSpeed);
-    }
-    else
-    {
-      unitAnimator.SetBool("IsWalking", false);
+        moveAction = GetComponent<MoveAction>();
     }
 
-    GridPosition newGridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
-    if (newGridPosition != gridPosition)
+    private void Start()
     {
-      LevelGrid.Instance.UnitMovedGridPosition(this, gridPosition, newGridPosition);
-      gridPosition = newGridPosition;
+        gridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
+        LevelGrid.Instance.AddUnitAtGridPosition(gridPosition, this);
     }
-  }
 
-  public void Move(Vector3 targetPosition)
-  {
-    this.targetPosition = targetPosition;
-  }
+    private void Update()
+    {
+        GridPosition newGridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
+        if (newGridPosition != gridPosition)
+        {
+            // Unit changed Grid Position
+            LevelGrid.Instance.UnitMovedGridPosition(this, gridPosition, newGridPosition);
+            gridPosition = newGridPosition;
+        }
+    }
+
+    public MoveAction GetMoveAction()
+    {
+        return moveAction;
+    }
+
+    public GridPosition GetGridPosition()
+    {
+        return gridPosition;
+    }
+
+
 }
